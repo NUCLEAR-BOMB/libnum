@@ -1,6 +1,7 @@
 #pragma once
 
 #include <libnum/detail/addcarry.hpp>
+#include <libnum/detail/subborrow.hpp>
 
 #include <cstdint>
 
@@ -17,23 +18,22 @@ public:
 		: first{first_}, second{second_} {}
 
 	LIBNUM_FORCEINLINE
-	friend uint128 operator+(uint128 left, const std::uint64_t right) noexcept {
-		using detail::add_carry;
+	friend uint128 operator+(uint128 left, const uint128 right) noexcept {
+		using detail::addcarry;
 
 		std::uint8_t c{};
-		left.first = add_carry(left.first, right, 0, c);
-		left.second = add_carry(left.second, 0, c, c);
+		left.first = addcarry(left.first, right.first, 0, c);
+        left.second = addcarry(left.second, right.second, c, c);
 		return left;
 	}
-
-	LIBNUM_FORCEINLINE
-	friend uint128 operator+(const std::uint64_t left, uint128 right) noexcept {
-		using detail::add_carry;
+    LIBNUM_FORCEINLINE
+	friend uint128 operator-(uint128 left, const uint128 right) noexcept {
+		using detail::subborrow;
 
 		std::uint8_t c{};
-		right.first = add_carry(right.first, left, 0, c);
-		right.second = add_carry(right.second, 0, c, c);
-		return right;
+		left.first = subborrow(left.first, right.first, 0, c);
+        left.second = subborrow(left.second, right.second, c, c);
+		return left;
 	}
 
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
