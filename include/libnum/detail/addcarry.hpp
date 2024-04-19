@@ -7,6 +7,8 @@
 #include <intrin.h>
 #include <cstdint>
 
+#pragma intrinsic(_addcarry_u64)
+
 namespace libnum::detail {
 
 LIBNUM_FORCEINLINE
