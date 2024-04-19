@@ -1,0 +1,29 @@
+
+include("${PROJECT_SOURCE_DIR}/cmake/warnings.cmake")
+
+add_executable(libnum-test
+	"main.cpp"
+	
+	"uint128.cpp"
+)
+
+target_add_warnings(libnum-test)
+target_link_libraries(libnum-test PRIVATE libnum)
+
+include(FetchContent)
+FetchContent_Declare(
+    doctest
+    GIT_REPOSITORY https://github.com/doctest/doctest.git
+    GIT_TAG        v2.4.11
+	SYSTEM
+)
+set(CMAKE_WARN_DEPRECATED FALSE CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(doctest)
+unset(CMAKE_WARN_DEPRECATED CACHE)
+
+target_link_libraries(libnum-test PRIVATE doctest::doctest)
+
+if (LIBNUM_ENABLE_SANITIZERS)
+    include("${PROJECT_SOURCE_DIR}/cmake/sanitizers.cmake")
+    target_add_sanitizer(libnum-test SANITIZERS Address Undefined)
+endif()
