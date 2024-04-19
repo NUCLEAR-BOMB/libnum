@@ -1,0 +1,9 @@
+/*
+
+!.gitignore
+!.gitattributes
+!.editorconfig
+!CMakeLists.txt
+!include/
+!test/
+!cmake/
