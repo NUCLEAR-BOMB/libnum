@@ -6,6 +6,7 @@ function(target_add_warnings target)
         /Wall /WX /permissive-
 		/wd4514 # 'function' : unreferenced inline function has been removed
         /wd4710 # 'function' : function not inlined
+        /wd4866 # 'file(line_number)' compiler may not enforce left-to-right evaluation order for call to operator_name
         >)
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
         target_compile_options(${target} PRIVATE $<$<COMPILE_LANGUAGE:CXX>:
