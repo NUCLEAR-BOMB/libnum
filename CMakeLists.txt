@@ -10,6 +10,7 @@ add_library(libnum INTERFACE
 
     "include/libnum/detail/addcarry.hpp"
     "include/libnum/detail/subborrow.hpp"
+    "include/libnum/detail/mul.hpp"
     "include/libnum/detail/preprocessor.hpp"
 )
 
