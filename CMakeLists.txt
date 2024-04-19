@@ -9,6 +9,7 @@ add_library(libnum INTERFACE
     "include/libnum/uint128.hpp"
 
     "include/libnum/detail/addcarry.hpp"
+    "include/libnum/detail/subborrow.hpp"
     "include/libnum/detail/preprocessor.hpp"
 )
 
