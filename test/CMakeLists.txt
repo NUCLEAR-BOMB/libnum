@@ -22,6 +22,7 @@ FetchContent_MakeAvailable(doctest)
 unset(CMAKE_WARN_DEPRECATED CACHE)
 
 target_link_libraries(libnum-test PRIVATE doctest::doctest)
+target_compile_definitions(libnum-test PRIVATE DOCTEST_CONFIG_NO_EXCEPTIONS)
 
 if (LIBNUM_ENABLE_SANITIZERS)
     include("${PROJECT_SOURCE_DIR}/cmake/sanitizers.cmake")
