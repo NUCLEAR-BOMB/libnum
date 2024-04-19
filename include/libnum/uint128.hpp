@@ -16,6 +16,7 @@ public:
 	explicit constexpr uint128(const std::uint64_t first_, const std::uint64_t second_) noexcept
 		: first{first_}, second{second_} {}
 
+	LIBNUM_FORCEINLINE
 	friend uint128 operator+(uint128 left, const std::uint64_t right) noexcept {
 		using detail::add_carry;
 
@@ -24,6 +25,8 @@ public:
 		left.second = add_carry(left.second, 0, c, c);
 		return left;
 	}
+
+	LIBNUM_FORCEINLINE
 	friend uint128 operator+(const std::uint64_t left, uint128 right) noexcept {
 		using detail::add_carry;
 
