@@ -16,7 +16,6 @@ public:
 	explicit constexpr uint128(const std::uint64_t high_, const std::uint64_t low_) noexcept
 		: low{low_}, high{high_} {}
 
-	LIBNUM_FORCEINLINE
 	friend uint128 operator+(uint128 left, const uint128 right) noexcept {
 		using detail::addcarry;
 
@@ -25,7 +24,6 @@ public:
         left.high = addcarry(left.high, right.high, c, c);
 		return left;
 	}
-    LIBNUM_FORCEINLINE
 	friend uint128 operator-(uint128 left, const uint128 right) noexcept {
 		using detail::subborrow;
 
@@ -34,7 +32,6 @@ public:
         left.high = subborrow(left.high, right.high, c, c);
 		return left;
 	}
-    LIBNUM_FORCEINLINE
 	friend uint128 operator*(uint128 left, const uint128 right) noexcept {
 		using detail::mul;
 
@@ -57,25 +54,21 @@ public:
     //     return left;
 	// }
 
-    LIBNUM_FORCEINLINE
     friend uint128 operator&(uint128 left, const uint128 right) noexcept {
         left.low &= right.low;
         left.high &= right.high;
         return left;
     }
-    LIBNUM_FORCEINLINE
     friend uint128 operator|(uint128 left, const uint128 right) noexcept {
         left.low |= right.low;
         left.high |= right.high;
         return left;
     }
-    LIBNUM_FORCEINLINE
     friend uint128 operator^(uint128 left, const uint128 right) noexcept {
         left.low ^= right.low;
         left.high ^= right.high;
         return left;
     }
-    LIBNUM_FORCEINLINE
     friend uint128 operator<<(uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shl128;
 
@@ -87,7 +80,6 @@ public:
 
         return left;
     }
-    LIBNUM_FORCEINLINE
     friend uint128 operator>>(uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shr128;
 
