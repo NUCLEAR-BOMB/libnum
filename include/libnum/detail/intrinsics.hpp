@@ -4,7 +4,11 @@
 #include <intrin.h>
 #include <cstdint>
 
-#pragma intrinsic(_addcarry_u64, _subborrow_u64, _umul128, _udiv128)
+#pragma intrinsic( \
+    _addcarry_u64, _subborrow_u64, _umul128, _udiv128, \
+    _rotl64, _rotl, _rotl16, _rotl8, _rotr64, _rotr, _rotr16, _rotr8, \
+    __shiftleft128, __shiftright128 \
+)
 
 namespace libnum::detail {
 
@@ -33,15 +37,15 @@ inline std::uint64_t div128(std::uint64_t hx, std::uint64_t lx, std::uint64_t y,
 }
 
 LIBNUM_FORCEINLINE
-inline std::uint64_t rotl(std::uint64_t x, std::uint64_t count) noexcept {
+inline std::uint64_t rotl(std::uint64_t x, std::uint8_t count) noexcept {
     return ::_rotl64(x, count);
 }
 LIBNUM_FORCEINLINE
-inline std::uint32_t rotl(std::uint32_t x, std::uint32_t count) noexcept {
+inline std::uint32_t rotl(std::uint32_t x, std::uint8_t count) noexcept {
     return ::_rotl(x, count);
 }
 LIBNUM_FORCEINLINE
-inline std::uint16_t rotl(std::uint16_t x, std::uint16_t count) noexcept {
+inline std::uint16_t rotl(std::uint16_t x, std::uint8_t count) noexcept {
     return ::_rotl16(x, count);
 }
 LIBNUM_FORCEINLINE
@@ -50,20 +54,29 @@ inline std::uint8_t rotl(std::uint8_t x, std::uint8_t count) noexcept {
 }
 
 LIBNUM_FORCEINLINE
-inline std::uint64_t rotr(std::uint64_t x, std::uint64_t count) noexcept {
+inline std::uint64_t rotr(std::uint64_t x, std::uint8_t count) noexcept {
     return ::_rotr64(x, count);
 }
 LIBNUM_FORCEINLINE
-inline std::uint32_t rotr(std::uint32_t x, std::uint32_t count) noexcept {
+inline std::uint32_t rotr(std::uint32_t x, std::uint8_t count) noexcept {
     return ::_rotr(x, count);
 }
 LIBNUM_FORCEINLINE
-inline std::uint16_t rotr(std::uint16_t x, std::uint16_t count) noexcept {
+inline std::uint16_t rotr(std::uint16_t x, std::uint8_t count) noexcept {
     return ::_rotr16(x, count);
 }
 LIBNUM_FORCEINLINE
 inline std::uint8_t rotr(std::uint8_t x, std::uint8_t count) noexcept {
     return ::_rotr8(x, count);
+}
+
+LIBNUM_FORCEINLINE
+inline std::uint64_t shl128(std::uint64_t lx, std::uint64_t hx, std::uint8_t count) noexcept {
+    return ::__shiftleft128(lx, hx, count);
+}
+LIBNUM_FORCEINLINE
+inline std::uint64_t shr128(std::uint64_t lx, std::uint64_t hx, std::uint8_t count) noexcept {
+    return ::__shiftright128(lx, hx, count);
 }
 
 }
