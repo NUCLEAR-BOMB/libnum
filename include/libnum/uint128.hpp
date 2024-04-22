@@ -72,8 +72,8 @@ public:
     friend uint128 operator<<(uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shl128;
 
-        std::uint64_t x = shl128(left.low, left.high, cnt);
-        std::uint64_t y = left.low << cnt;
+        std::uint64_t x = shl128(left.low, left.high, (cnt % 64U));
+        std::uint64_t y = left.low << (cnt % 64U);
 
         left.low = (cnt & 64) == 0 ? y : 0;
         left.high = (cnt & 64) != 0 ? y : x;
@@ -83,8 +83,8 @@ public:
     friend uint128 operator>>(uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shr128;
 
-        std::uint64_t x = shr128(left.low, left.high, cnt);
-        std::uint64_t y = left.high >> cnt;
+        std::uint64_t x = shr128(left.low, left.high, (cnt % 64U));
+        std::uint64_t y = left.high >> (cnt % 64U);
 
         left.high = (cnt & 64) == 0 ? y : 0;
         left.low = (cnt & 64) != 0 ? y : x;
@@ -119,7 +119,9 @@ public:
 	friend bool operator!=(const uint128 left, const uint128 right) noexcept {
 		return (left.low != right.low) || (left.high != right.high);
 	}
+    [[msvc::noinline]]
 	friend bool operator>(const uint128 left, const uint128 right) noexcept {
+        // __debugbreak();
         using detail::subborrow;
 
         std::uint8_t c{};
