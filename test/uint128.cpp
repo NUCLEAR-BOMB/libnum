@@ -127,4 +127,22 @@ TEST_CASE("uint128::operator<<") {
     CHECK_EQ(uint128{1, 1} << 128, uint128{1, 1});
 }
 
+TEST_CASE("uint128::operator>>") {
+    CHECK_EQ(uint128{0} >> 0, uint128{0});
+    CHECK_EQ(uint128{0} >> 1, uint128{0});
+    CHECK_EQ(uint128{0} >> 63, uint128{0});
+    CHECK_EQ(uint128{0} >> 64, uint128{0});
+    CHECK_EQ(uint128{0} >> 65, uint128{0});
+    CHECK_EQ(uint128{0} >> 127, uint128{0});
+
+    CHECK_EQ(uint128{1} >> 1, uint128{0});
+    CHECK_EQ(uint128{2} >> 1, uint128{1});
+    CHECK_EQ(uint128{1ULL << 63} >> 63, uint128{1});
+    CHECK_EQ(uint128{1ULL << 63} >> 64, uint128{0});
+    CHECK_EQ(uint128{1, 0} >> 64, uint128{1});
+    CHECK_EQ(uint128{1, 0} >> 65, uint128{0});
+    CHECK_EQ(uint128{1ULL << 63, 0} >> 127, uint128{1});
+    CHECK_EQ(uint128{1ULL << 63, 0} >> 128, uint128{1ULL << 63, 0});
+}
+
 }
