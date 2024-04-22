@@ -28,3 +28,13 @@ if (LIBNUM_ENABLE_SANITIZERS)
     include("${PROJECT_SOURCE_DIR}/cmake/sanitizers.cmake")
     target_add_sanitizer(libnum-test SANITIZERS Address Undefined)
 endif()
+
+if (LIBNUM_ENABLE_CLANG_TIDY)
+    include("${PROJECT_SOURCE_DIR}/cmake/clang_tidy.cmake")
+    set_target_properties(libnum-test PROPERTIES EXPORT_COMPILE_COMMANDS TRUE)
+    add_clang_tidy_target(NAME clang-tidy
+        CONFIG "${PROJECT_SOURCE_DIR}/.clang-tidy"
+        EXTRA_ARG "-std=c++17" "-Wno-unknown-warning-option"
+        USE_COLOR QUIET
+    )
+endif()
