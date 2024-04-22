@@ -8,10 +8,7 @@ option(LIBNUM_ENABLE_SANITIZERS "Enable sanitizers for test project" ${PROJECT_I
 add_library(libnum INTERFACE
     "include/libnum/uint128.hpp"
 
-    "include/libnum/detail/addcarry.hpp"
-    "include/libnum/detail/subborrow.hpp"
-    "include/libnum/detail/mul.hpp"
-    "include/libnum/detail/div.hpp"
+    "include/libnum/detail/intrinsics.hpp"
     "include/libnum/detail/preprocessor.hpp"
 )
 
