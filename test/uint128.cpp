@@ -145,4 +145,11 @@ TEST_CASE("uint128::operator>>") {
     CHECK_EQ(uint128{1ULL << 63, 0} >> 128, uint128{1ULL << 63, 0});
 }
 
+TEST_CASE("uint128::operator~") {
+    CHECK(~uint128{1} == uint128{~0ULL, ~0ULL ^ 1});
+    CHECK(~uint128{0, ~0ULL} == uint128{~0ULL, 0});
+    CHECK(~uint128{~0ULL, 0} == uint128{0, ~0ULL});
+    CHECK(~uint128{~0ULL, ~0ULL} == uint128{0});
+}
+
 }
