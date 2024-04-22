@@ -95,4 +95,12 @@ TEST_CASE("uint128::operator|") {
     CHECK_EQ(uint128{0b1010, 0b0000} | uint128{0b0000, 0b1111}, uint128{0b1010, 0b1111});
 }
 
+TEST_CASE("uint128::operator^") {
+    CHECK_EQ(uint128{0b0000} ^ uint128{0b0000}, uint128{0b0000});
+    CHECK_EQ(uint128{0b0000} ^ uint128{0b1010}, uint128{0b1010});
+    CHECK_EQ(uint128{0b1000} ^ uint128{0b1010}, uint128{0b0010});
+
+    CHECK_EQ(uint128{0b1010, 0b0000} ^ uint128{0b0000, 0b1111}, uint128{0b1010, 0b1111});
+}
+
 }
