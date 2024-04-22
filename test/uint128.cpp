@@ -78,4 +78,13 @@ TEST_CASE("uint128::operator*") {
 //     CHECK(uint128{2, 0} / 2 == 0);
 // }
 
+TEST_CASE("uint128::operator&") {
+    CHECK_EQ(uint128{0b1111} & uint128{0b1111}, uint128{0b1111});
+    CHECK_EQ(uint128{0b1111} & uint128{0b1110}, uint128{0b1110});
+    CHECK_EQ(uint128{0b1101} & uint128{0b1110}, uint128{0b1100});
+
+    CHECK_EQ(uint128{0b1111, 0b1111} & uint128{0b1111}, uint128{0b1111});
+    CHECK_EQ(uint128{0b1111, 0b1111} & uint128{0b1100, 0b1111}, uint128{0b1100, 0b1111});
+}
+
 }

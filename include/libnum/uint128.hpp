@@ -57,6 +57,13 @@ public:
     //     return left;
 	// }
 
+    LIBNUM_FORCEINLINE
+    friend uint128 operator&(uint128 left, const uint128 right) noexcept {
+        left.low &= right.low;
+        left.high &= right.high;
+        return left;
+    }
+
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
 		return (left.low == right.low) && (left.high == right.high);
 	}
