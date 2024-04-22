@@ -97,6 +97,21 @@ public:
         return left;
     }
 
+    friend uint128& operator&=(uint128& left, const uint128 right) noexcept {
+        return (left = left & right);
+    }
+    friend uint128& operator|=(uint128& left, const uint128 right) noexcept {
+        return (left = left | right);
+    }
+    friend uint128& operator^=(uint128& left, const uint128 right) noexcept {
+        return (left = left ^ right);
+    }
+    friend uint128& operator<<=(uint128& left, const std::uint8_t right) noexcept {
+        return (left = left << right);
+    }
+    friend uint128& operator>>=(uint128& left, const std::uint8_t right) noexcept {
+        return (left = left >> right);
+    }
 
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
 		return (left.low == right.low) && (left.high == right.high);

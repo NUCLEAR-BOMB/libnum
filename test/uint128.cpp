@@ -152,4 +152,30 @@ TEST_CASE("uint128::operator~") {
     CHECK(~uint128{~0ULL, ~0ULL} == uint128{0});
 }
 
+TEST_CASE("uint128::operator&=") {
+    uint128 x = 0b1101;
+    x &= 0b1010;
+    CHECK(x == 0b1000);
+}
+TEST_CASE("uint128::operator|=") {
+    uint128 x = 0b1001;
+    x |= 0b1010;
+    CHECK(x == 0b1011);
+}
+TEST_CASE("uint128::operator^=") {
+    uint128 x = 0b1001;
+    x ^= 0b1010;
+    CHECK(x == 0b0011);
+}
+TEST_CASE("uint128::operator<<=") {
+    uint128 x = 0b1001;
+    x <<= 2;
+    CHECK(x == 0b100100);
+}
+TEST_CASE("uint128::operator>>=") {
+    uint128 x = 0b1001;
+    x >>= 2;
+    CHECK(x == 0b10);
+}
+
 }
