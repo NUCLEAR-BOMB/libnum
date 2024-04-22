@@ -75,6 +75,18 @@ public:
         left.high ^= right.high;
         return left;
     }
+    LIBNUM_FORCEINLINE
+    friend uint128 operator<<(uint128 left, const std::uint8_t cnt) noexcept {
+        using detail::shl128;
+
+        std::uint64_t x = shl128(left.low, left.high, cnt);
+        std::uint64_t y = left.low << cnt;
+
+        left.low = (cnt & 64) == 0 ? y : 0;
+        left.high = (cnt & 64) != 0 ? y : x;
+
+        return left;
+    }
 
 
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
