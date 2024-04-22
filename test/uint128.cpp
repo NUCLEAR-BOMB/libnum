@@ -65,4 +65,17 @@ TEST_CASE("uint128::operator*") {
     CHECK(x * 5 == uint128{4, uint64_t(-10000) * 5});
 }
 
+// TEST_CASE("uint128::operator/") {
+//     uint128 x = 10;
+// 
+//     CHECK(x / 2 == 5);
+//     CHECK(x / 3 == 3);
+//     CHECK(x / 10 == 1);
+//     CHECK(x / 11 == 0);
+// 
+//     CHECK(uint128{1, 0} / 2 == 9223372036854775808);
+//     CHECK(uint128{1, 8} / 2 == 9223372036854775808 + 4);
+//     CHECK(uint128{2, 0} / 2 == 0);
+// }
+
 }

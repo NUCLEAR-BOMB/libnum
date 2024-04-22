@@ -3,6 +3,7 @@
 #include <libnum/detail/addcarry.hpp>
 #include <libnum/detail/subborrow.hpp>
 #include <libnum/detail/mul.hpp>
+#include <libnum/detail/div.hpp>
 
 #include <cstdint>
 
@@ -45,6 +46,19 @@ public:
         left.high = (left.high * right.high) + high;
         return left;
 	}
+    // LIBNUM_FORCEINLINE
+	// friend uint128 operator/(uint128 left, uint128 right) noexcept {
+	// 	using detail::div128;
+    // 
+    //     [[maybe_unused]] std::uint64_t rem{};
+    //     if (left.high < right.low) {
+    //         left.low = div128(left.high, left.low, right.low, rem);
+    //     } else {
+    //         left.low = left.low / right.low;
+    //     }
+    //     left.high = right.high != 0 ? (left.high / right.high) : 0;
+    //     return left;
+	// }
 
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
 		return (left.low == right.low) && (left.high == right.high);
