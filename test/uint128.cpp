@@ -178,4 +178,13 @@ TEST_CASE("uint128::operator>>=") {
     CHECK(x == 0b10);
 }
 
+TEST_CASE("uint128::operator>") {
+    CHECK_FALSE(uint128{0} > uint128{0});
+    CHECK(uint128{1} > uint128{0});
+    CHECK(uint128{1ULL << 63} > uint128{0});
+    CHECK(uint128{1, 0} > uint128{0});
+    CHECK(uint128{1ULL << 63, 0} > uint128{0});
+}
+
+
 }
