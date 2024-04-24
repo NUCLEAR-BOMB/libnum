@@ -70,21 +70,24 @@ public:
         return left;
     }
     friend uint128 operator<<(uint128 left, const std::uint8_t cnt) noexcept {
-        using detail::shl128;
+        using detail::shl128, detail::shl;
 
-        std::uint64_t x = shl128(left.low, left.high, (cnt % 64U));
-        std::uint64_t y = left.low << (cnt % 64U);
+        std::uint64_t x = shl128(left.low, left.high, cnt);
+        std::uint64_t y = shl(left.low, cnt);
 
-        left.low = (cnt & 64) == 0 ? y : 0;
+        std::uint64_t z = 0;
+        if ((cnt & 64) == 0) { z = y; }
+        left.low = z;
+
         left.high = (cnt & 64) != 0 ? y : x;
 
         return left;
     }
     friend uint128 operator>>(uint128 left, const std::uint8_t cnt) noexcept {
-        using detail::shr128;
+        using detail::shr128, detail::shr;
 
         std::uint64_t x = shr128(left.low, left.high, (cnt % 64U));
-        std::uint64_t y = left.high >> (cnt % 64U);
+        std::uint64_t y = shr(left.high, cnt);
 
         left.high = (cnt & 64) == 0 ? y : 0;
         left.low = (cnt & 64) != 0 ? y : x;

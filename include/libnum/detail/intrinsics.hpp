@@ -79,4 +79,17 @@ inline std::uint64_t shr128(std::uint64_t lx, std::uint64_t hx, std::uint8_t cou
     return ::__shiftright128(lx, hx, count);
 }
 
+LIBNUM_FORCEINLINE
+inline std::uint64_t shl(std::uint64_t x, std::uint8_t cnt) noexcept {
+    return ::__ll_lshift(x, cnt);
+}
+LIBNUM_FORCEINLINE
+inline std::uint64_t shr(std::uint64_t x, std::uint8_t cnt) noexcept {
+    return ::__ull_rshift(x, cnt);
+}
+LIBNUM_FORCEINLINE
+inline std::int64_t sar(std::int64_t x, std::uint8_t cnt) noexcept {
+    return ::__ll_rshift(x, cnt);
+}
+
 }
