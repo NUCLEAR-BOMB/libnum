@@ -122,11 +122,9 @@ public:
 	friend bool operator!=(const uint128 left, const uint128 right) noexcept {
 		return (left.low != right.low) || (left.high != right.high);
 	}
-    [[msvc::noinline]]
-	friend bool operator>(const uint128 left, const uint128 right) noexcept {
-        // __debugbreak();
+	friend bool operator>(uint128 left, uint128 right) noexcept {
         using detail::subborrow;
-
+        
         std::uint8_t c{};
         (void)subborrow(right.high, left.high, left.low > right.low, c);
         return static_cast<bool>(c);
