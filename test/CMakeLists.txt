@@ -38,3 +38,5 @@ if (LIBNUM_ENABLE_CLANG_TIDY)
         USE_COLOR QUIET
     )
 endif()
+
+add_subdirectory(asm)

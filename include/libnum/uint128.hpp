@@ -69,7 +69,7 @@ public:
         left.high ^= right.high;
         return left;
     }
-    friend uint128 operator<<(uint128 left, const std::uint8_t cnt) noexcept {
+    friend uint128 operator<<(uint128 left, std::uint8_t cnt) noexcept {
         using detail::shl128, detail::shl;
 
         std::uint64_t x = shl128(left.low, left.high, cnt);
