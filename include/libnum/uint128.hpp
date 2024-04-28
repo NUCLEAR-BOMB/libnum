@@ -94,10 +94,8 @@ public:
 
         return uint128{high, low};
     }
-    friend uint128 operator~(uint128 left) noexcept {
-        left.low = ~left.low;
-        left.high = ~left.high;
-        return left;
+    friend uint128 operator~(const uint128 left) noexcept {
+        return uint128{~left.high, ~left.low};
     }
 
     friend uint128& operator&=(uint128& left, const uint128 right) noexcept {
