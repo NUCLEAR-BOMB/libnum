@@ -24,6 +24,8 @@ unset(CMAKE_WARN_DEPRECATED CACHE)
 target_link_libraries(libnum-test PRIVATE doctest::doctest)
 target_compile_definitions(libnum-test PRIVATE DOCTEST_CONFIG_NO_EXCEPTIONS)
 
+add_custom_target(run-libnum-test VERBATIM COMMAND "$<TARGET_FILE:libnum-test>")
+
 if (LIBNUM_ENABLE_SANITIZERS)
     include("${PROJECT_SOURCE_DIR}/cmake/sanitizers.cmake")
     target_add_sanitizer(libnum-test SANITIZERS Address Undefined)
