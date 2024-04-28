@@ -86,7 +86,7 @@ public:
     friend uint128 operator>>(uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shr128, detail::shr;
 
-        std::uint64_t x = shr128(left.low, left.high, (cnt % 64U));
+        std::uint64_t x = shr128(left.low, left.high, cnt);
         std::uint64_t y = shr(left.high, cnt);
 
         left.high = (cnt & 64) == 0 ? y : 0;
