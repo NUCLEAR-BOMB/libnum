@@ -3,11 +3,13 @@
 #include <libnum/detail/preprocessor.hpp>
 #include <intrin.h>
 #include <cstdint>
+#include <cstring>
 
 #pragma intrinsic( \
     _addcarry_u64, _subborrow_u64, _umul128, _udiv128, \
     _rotl64, _rotl, _rotl16, _rotl8, _rotr64, _rotr, _rotr16, _rotr8, \
-    __shiftleft128, __shiftright128 \
+    __shiftleft128, __shiftright128, \
+    memcpy \
 )
 
 namespace libnum::detail {
@@ -90,6 +92,15 @@ inline std::uint64_t shr(std::uint64_t x, std::uint8_t cnt) noexcept {
 LIBNUM_FORCEINLINE
 inline std::int64_t sar(std::int64_t x, std::uint8_t cnt) noexcept {
     return ::__ll_rshift(x, cnt);
+}
+
+template<class To, class From> LIBNUM_FORCEINLINE
+To bit_cast(const From& from) noexcept {
+    static_assert(sizeof(To) == sizeof(From));
+
+    To res;
+    ::memcpy(&res, &from, sizeof(To));
+    return res;
 }
 
 }

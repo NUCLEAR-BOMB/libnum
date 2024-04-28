@@ -184,7 +184,54 @@ TEST_CASE("uint128::operator>") {
     CHECK(uint128{1ULL << 63} > uint128{0});
     CHECK(uint128{1, 0} > uint128{0});
     CHECK(uint128{1ULL << 63, 0} > uint128{0});
+
+    CHECK_FALSE(uint128{0} > uint128{1});
+    CHECK_FALSE(uint128{1, 0} > uint128{2, 0});
+    CHECK_FALSE(uint128{1, 1} > uint128{2, 0});
+}
+
+TEST_CASE("uint128::operator>=") {
+    CHECK(uint128{0} >= uint128{0});
+    CHECK(uint128{1} >= uint128{0});
+    CHECK(uint128{1ULL << 63} >= uint128{0});
+    CHECK(uint128{1, 0} >= uint128{0});
+    CHECK(uint128{1ULL << 63, 0} >= uint128{0});
+    CHECK(uint128{1, 1} >= uint128{0, 0});
+    CHECK(uint128{1, 1} >= uint128{0, 2});
+
+    CHECK_FALSE(uint128{0} >= uint128{1});
+    CHECK_FALSE(uint128{0} >= uint128{1, 0});
+    CHECK_FALSE(uint128{1, 0} >= uint128{2, 0});
+    CHECK_FALSE(uint128{1, 0} >= uint128{2, 1});
+    CHECK_FALSE(uint128{1, 1} >= uint128{2, 0});
+}
+
+TEST_CASE("uint128::operator<") {
+    CHECK(uint128{0} < uint128{1});
+    CHECK(uint128{0} < uint128{1, 1});
+    CHECK(uint128{1} < uint128{1, 1});
+    CHECK(uint128{1, 1} < uint128{1, 2});
+
+    CHECK_FALSE(uint128{2, 1} < uint128{1, 2});
+    CHECK_FALSE(uint128{0} < uint128{0});
+    CHECK_FALSE(uint128{1} < uint128{0});
+    CHECK_FALSE(uint128{1, 0} < uint128{0});
+    CHECK_FALSE(uint128{1, 1} < uint128{1, 0});
+}
+
+TEST_CASE("uint128::operator<=") {
+    CHECK(uint128{0} <= uint128{0});
+    CHECK(uint128{0} <= uint128{1});
+    CHECK(uint128{0} <= uint128{1, 1});
+    CHECK(uint128{1} <= uint128{1, 1});
+    CHECK(uint128{1, 1} <= uint128{1, 2});
+
+    CHECK_FALSE(uint128{2, 1} <= uint128{1, 2});
+    CHECK_FALSE(uint128{1} <= uint128{0});
+    CHECK_FALSE(uint128{1, 0} <= uint128{0});
+    CHECK_FALSE(uint128{1, 1} <= uint128{1, 0});
 }
 
 
 }
+

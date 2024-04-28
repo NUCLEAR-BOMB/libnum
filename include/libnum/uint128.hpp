@@ -122,13 +122,46 @@ public:
 	friend bool operator!=(const uint128 left, const uint128 right) noexcept {
 		return (left.low != right.low) || (left.high != right.high);
 	}
-	friend bool operator>(uint128 left, uint128 right) noexcept {
-        using detail::subborrow;
-        
+	friend bool operator>(const uint128 left, const uint128 right) noexcept {
+        // cmp low2, low1
+        // sbb high2, high1
+        // setc al
+        using detail::subborrow, detail::bit_cast;
+
         std::uint8_t c{};
-        (void)subborrow(right.high, left.high, left.low > right.low, c);
-        return static_cast<bool>(c);
+        (void)subborrow(right.high, left.high, std::uint8_t(right.low < left.low), c);
+        return bit_cast<bool>(c);
 	}
+	friend bool operator>=(const uint128 left, const uint128 right) noexcept {
+        // cmp low1, low2
+        // sbb high1, high2
+        // setnc al
+        using detail::subborrow, detail::bit_cast;
+
+        std::uint8_t c{};
+        (void)subborrow(left.high, right.high, std::uint8_t(left.low < right.low), c);
+        return !bit_cast<bool>(c); // msvc generates: setc al; test al,al; sete al instead of setnc
+	}                      
+    friend bool operator<(const uint128 left, const uint128 right) noexcept {
+        // cmp low1, low2
+        // sbb high1, high2
+        // setc al
+        using detail::subborrow, detail::bit_cast;
+
+        std::uint8_t c{};
+        (void)subborrow(left.high, right.high, std::uint8_t(left.low < right.low), c);
+        return bit_cast<bool>(c);
+    }
+    friend bool operator<=(const uint128 left, const uint128 right) noexcept {
+        // cmp low2, low1
+        // sbb high2, high1
+        // setnc al
+        using detail::subborrow, detail::bit_cast;
+
+        std::uint8_t c{};
+        (void)subborrow(right.high, left.high, std::uint8_t(right.low < left.low), c);
+        return !bit_cast<bool>(c); // msvc generates: setc al; test al,al; sete al instead of setnc
+    }
 
 };
 
