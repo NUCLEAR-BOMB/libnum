@@ -32,13 +32,14 @@ public:
         left.high = subborrow(left.high, right.high, c, c);
 		return left;
 	}
-	friend uint128 operator*(uint128 left, const uint128 right) noexcept {
+	friend uint128 operator*(const uint128 left, const uint128 right) noexcept {
 		using detail::mul;
 
         std::uint64_t high{};
-        left.low = mul(left.low, right.low, high);
-        left.high = (left.high * right.high) + high;
-        return left;
+        std::uint64_t low = mul(left.low, right.low, high);
+        high += left.low * right.high;
+        high += left.high * right.low;
+        return uint128{high, low};
 	}
     // LIBNUM_FORCEINLINE
 	// friend uint128 operator/(uint128 left, uint128 right) noexcept {

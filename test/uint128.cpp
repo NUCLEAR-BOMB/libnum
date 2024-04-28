@@ -53,16 +53,15 @@ TEST_CASE("uint128::operator-") {
 }
 
 TEST_CASE("uint128::operator*") {
-    uint128 x = 5;
-    uint128 y = 10;
-
-    CHECK(x * y == 50);
-    CHECK(y * x == 50);
-
-    CHECK(x * 100 == 500);
-
-    x = uint64_t(-10000);
-    CHECK(x * 5 == uint128{4, uint64_t(-10000) * 5});
+    CHECK(uint128{0} * uint128{0} == uint128{0});
+    CHECK(uint128{1} * uint128{0} == uint128{0});
+    CHECK(uint128{1} * uint128{1} == uint128{1});
+    CHECK(uint128{1, 1} * uint128{1} == uint128{1, 1});
+    CHECK(uint128{1, 1} * uint128{2} == uint128{2, 2});
+    CHECK(uint128{1, 2} * uint128{2} == uint128{2, 4});
+    CHECK(uint128{1, 1} * uint128{1, 0} == uint128{1, 0});
+    CHECK(uint128{1, 1} * uint128{2, 0} == uint128{2, 0});
+    CHECK(uint128{1, 2} * uint128{2, 0} == uint128{4, 0});
 }
 
 // TEST_CASE("uint128::operator/") {

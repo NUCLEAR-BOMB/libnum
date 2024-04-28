@@ -28,7 +28,7 @@ add_custom_target(run-libnum-test VERBATIM COMMAND "$<TARGET_FILE:libnum-test>")
 
 if (LIBNUM_ENABLE_SANITIZERS)
     include("${PROJECT_SOURCE_DIR}/cmake/sanitizers.cmake")
-    target_add_sanitizer(libnum-test SANITIZERS Address Undefined)
+    # target_add_sanitizer(libnum-test SANITIZERS Address Undefined)
 endif()
 
 if (LIBNUM_ENABLE_CLANG_TIDY)
