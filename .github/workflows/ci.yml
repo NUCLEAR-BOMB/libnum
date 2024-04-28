@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    name: "${{matrix.os}} | Config: ${{matrix.config}}"
+    runs-on: ${{matrix.os}}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["windows-2022"]
+        config: ["Debug", "Release"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.4
+
+      - name: Configure CMake
+        run: cmake -B build ${{matrix.os}} -DCMAKE_BUILD_TYPE=${{matrix.config}}
+
+      - name: Build
+        run: cmake --build build --config ${{matrix.config}}
+
+      - name: Run tests
+        run: cmake --build build --config ${{matrix.config}} --target run-libnum-test

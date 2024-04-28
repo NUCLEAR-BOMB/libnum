@@ -7,3 +7,4 @@
 !include/
 !test/
 !cmake/
+!.github/
