@@ -117,10 +117,20 @@ public:
     }
 
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
-		return (left.low == right.low) && (left.high == right.high);
+        // xor low2, low1
+        // xor high2, high1
+        // or low2, high2
+        // setz al
+
+		return ((left.low ^ right.low) | (left.high ^ right.high)) == 0;
 	}
 	friend bool operator!=(const uint128 left, const uint128 right) noexcept {
-		return (left.low != right.low) || (left.high != right.high);
+        // xor low2, low1
+        // xor high2, high1
+        // or low2, high2
+        // setnz al
+
+		return ((left.low ^ right.low) | (left.high ^ right.high)) != 0;
 	}
 	friend bool operator>(const uint128 left, const uint128 right) noexcept {
         // cmp low2, low1
