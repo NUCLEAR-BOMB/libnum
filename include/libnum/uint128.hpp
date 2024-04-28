@@ -69,19 +69,17 @@ public:
         left.high ^= right.high;
         return left;
     }
-    friend uint128 operator<<(uint128 left, std::uint8_t cnt) noexcept {
+    friend uint128 operator<<(const uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shl128, detail::shl;
 
         std::uint64_t x = shl128(left.low, left.high, cnt);
         std::uint64_t y = shl(left.low, cnt);
 
-        std::uint64_t z = 0;
-        if ((cnt & 64) == 0) { z = y; }
-        left.low = z;
+        std::uint64_t low = 0;
+        if ((cnt & 64) == 0) { low = y; }
+        std::uint64_t high = (cnt & 64) != 0 ? y : x;
 
-        left.high = (cnt & 64) != 0 ? y : x;
-
-        return left;
+        return uint128{high, low};
     }
     friend uint128 operator>>(uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shr128, detail::shr;
@@ -89,10 +87,11 @@ public:
         std::uint64_t x = shr128(left.low, left.high, cnt);
         std::uint64_t y = shr(left.high, cnt);
 
-        left.high = (cnt & 64) == 0 ? y : 0;
-        left.low = (cnt & 64) != 0 ? y : x;
+        std::uint64_t high = 0;
+        if ((cnt & 64) == 0) { high = y; }
+        std::uint64_t low = (cnt & 64) != 0 ? y : x;
 
-        return left;
+        return uint128{high, low};
     }
     friend uint128 operator~(uint128 left) noexcept {
         left.low = ~left.low;
