@@ -16,21 +16,21 @@ public:
 	explicit constexpr uint128(const std::uint64_t high_, const std::uint64_t low_) noexcept
 		: low{low_}, high{high_} {}
 
-	friend uint128 operator+(uint128 left, const uint128 right) noexcept {
+	friend uint128 operator+(const uint128 left, const uint128 right) noexcept {
 		using detail::addcarry;
 
 		std::uint8_t c{};
-		left.low = addcarry(left.low, right.low, 0, c);
-        left.high = addcarry(left.high, right.high, c, c);
-		return left;
+		std::uint64_t low = addcarry(left.low, right.low, 0, c);
+        std::uint64_t high = addcarry(left.high, right.high, c, c);
+        return uint128{high, low};
 	}
-	friend uint128 operator-(uint128 left, const uint128 right) noexcept {
+	friend uint128 operator-(const uint128 left, const uint128 right) noexcept {
 		using detail::subborrow;
 
 		std::uint8_t c{};
-		left.low = subborrow(left.low, right.low, 0, c);
-        left.high = subborrow(left.high, right.high, c, c);
-		return left;
+		std::uint64_t low = subborrow(left.low, right.low, 0, c);
+        std::uint64_t high = subborrow(left.high, right.high, c, c);
+        return uint128{high, low};
 	}
 	friend uint128 operator*(const uint128 left, const uint128 right) noexcept {
 		using detail::mul;
@@ -55,20 +55,20 @@ public:
     //     return left;
 	// }
 
-    friend uint128 operator&(uint128 left, const uint128 right) noexcept {
-        left.low &= right.low;
-        left.high &= right.high;
-        return left;
+    friend uint128 operator&(const uint128 left, const uint128 right) noexcept {
+        std::uint64_t low = left.low & right.low;
+        std::uint64_t high = left.high & right.high;
+        return uint128{high, low};
     }
-    friend uint128 operator|(uint128 left, const uint128 right) noexcept {
-        left.low |= right.low;
-        left.high |= right.high;
-        return left;
+    friend uint128 operator|(const uint128 left, const uint128 right) noexcept {
+        std::uint64_t low = left.low | right.low;
+        std::uint64_t high = left.high | right.high;
+        return uint128{high, low};
     }
-    friend uint128 operator^(uint128 left, const uint128 right) noexcept {
-        left.low ^= right.low;
-        left.high ^= right.high;
-        return left;
+    friend uint128 operator^(const uint128 left, const uint128 right) noexcept {
+        std::uint64_t low = left.low ^ right.low;
+        std::uint64_t high = left.high ^ right.high;
+        return uint128{high, low};
     }
     friend uint128 operator<<(const uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shl128, detail::shl;
@@ -82,7 +82,7 @@ public:
 
         return uint128{high, low};
     }
-    friend uint128 operator>>(uint128 left, const std::uint8_t cnt) noexcept {
+    friend uint128 operator>>(const uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shr128, detail::shr;
 
         std::uint64_t x = shr128(left.low, left.high, cnt);
