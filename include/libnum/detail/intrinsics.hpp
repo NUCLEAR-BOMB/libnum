@@ -9,6 +9,7 @@
     _addcarry_u64, _subborrow_u64, _umul128, _udiv128, \
     _rotl64, _rotl, _rotl16, _rotl8, _rotr64, _rotr, _rotr16, _rotr8, \
     __shiftleft128, __shiftright128, \
+    _BitScanForward64, \
     memcpy \
 )
 
@@ -101,6 +102,19 @@ To bit_cast(const From& from) noexcept {
     To res;
     ::memcpy(&res, &from, sizeof(To));
     return res;
+}
+
+LIBNUM_FORCEINLINE
+inline std::uint8_t bsf(std::uint64_t x) noexcept {
+    unsigned long out{};
+    (void)::_BitScanForward64(&out, x);
+    return static_cast<std::uint8_t>(out);
+}
+LIBNUM_FORCEINLINE
+inline std::uint8_t bsf(std::uint32_t x) noexcept {
+    unsigned long out{};
+    (void)::_BitScanForward(&out, x);
+    return static_cast<std::uint8_t>(out);
 }
 
 }
