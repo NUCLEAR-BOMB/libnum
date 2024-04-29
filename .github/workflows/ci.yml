@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    name: "${{matrix.os}} | Config: '${{matrix.config}}', Options: '${{matrix.options}}'"
+    name: "${{matrix.os}} | Config: '${{matrix.config}}', Build options: '${{matrix.options.build}}'"
     runs-on: ${{matrix.os}}
 
     strategy:
@@ -12,8 +12,8 @@ jobs:
       matrix:
         os: ["windows-2022"]
         options:
-          - { build: "", llvm: 'false' }
-          - { build: "-T ClangCL", llvm: 'true' }
+          - { build: "", llvm: false }
+          - { build: "-T ClangCL", llvm: true }
 
         config: ["Debug", "Release"]
 
@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4.1.4
 
       - name: Install LLVM
-        if: matrix.options.llvm == 'true'
+        if: matrix.options.llvm == true
         uses: KyleMayes/install-llvm-action@v2.0.2
         with:
           version: "18.1.3"
