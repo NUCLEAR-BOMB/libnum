@@ -67,18 +67,18 @@ TEST_CASE("uint128::operator*") {
     CHECK(uint128{1, 2} * uint128{2, 0} == uint128{4, 0});
 }
 
-TEST_CASE("uint128::operator/") {
-    SUBCASE("uint64") {
-        CHECK(uint128{1} / 1 == uint128{1});
-        CHECK(uint128{2} / 1 == uint128{2});
-        CHECK(uint128{2} / 2 == uint128{1});
-        CHECK(uint128{2} / 3 == uint128{0});
-        CHECK(uint128{1, 1} / 1 == uint128{1, 1});
-        CHECK(uint128{1, 2} / 1 == uint128{1, 2});
-        CHECK(uint128{1, 2} / 2 == uint128{0, 1});
-        CHECK(uint128{3, 2} / 2 == uint128{1, 1});
-    }
-}
+// TEST_CASE("uint128::operator/") {
+//     SUBCASE("uint64") {
+//         CHECK(uint128{1} / 1 == uint128{1});
+//         CHECK(uint128{2} / 1 == uint128{2});
+//         CHECK(uint128{2} / 2 == uint128{1});
+//         CHECK(uint128{2} / 3 == uint128{0});
+//         CHECK(uint128{1, 1} / 1 == uint128{1, 1});
+//         CHECK(uint128{1, 2} / 1 == uint128{1, 2});
+//         CHECK(uint128{1, 2} / 2 == uint128{0, 1});
+//         CHECK(uint128{3, 2} / 2 == uint128{1, 1});
+//     }
+// }
 
 TEST_CASE("uint128::operator&") {
     CHECK_EQ(uint128{0b1111} & uint128{0b1111}, uint128{0b1111});

@@ -8,7 +8,7 @@
 namespace {
 
 template<class T>
-constexpr void numeric_limits_check() noexcept {
+void numeric_limits_check() noexcept {
     using limits = std::numeric_limits<T>;
     CHECK((std::is_same_v<decltype(limits::is_specialized), const bool> && limits::is_specialized) == true);
     CHECK(std::is_same_v<decltype(limits::is_signed), const bool>);

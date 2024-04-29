@@ -10,6 +10,7 @@
 namespace libnum {
 
 class uint128 {
+#if !LIBNUM_HAS_BUILTIN_UINT128
 private:
 	std::uint64_t low_;
 	std::uint64_t high_;
@@ -19,10 +20,8 @@ public:
 	explicit constexpr uint128(const std::uint64_t _high, const std::uint64_t _low) noexcept
 		: low_{_low}, high_{_high} {}
 
-    LIBNUM_FORCEINLINE constexpr std::uint64_t& low() noexcept { return low_; }
-    LIBNUM_FORCEINLINE constexpr const std::uint64_t& low() const noexcept { return low_; }
-    LIBNUM_FORCEINLINE constexpr std::uint64_t& high() noexcept { return high_; }
-    LIBNUM_FORCEINLINE constexpr const std::uint64_t& high() const noexcept { return high_; }
+    LIBNUM_FORCEINLINE constexpr std::uint64_t low() const noexcept { return low_; }
+    LIBNUM_FORCEINLINE constexpr std::uint64_t high() const noexcept { return high_; }
 
 	friend uint128 operator+(const uint128 left, const uint128 right) noexcept {
 		using detail::addcarry;
@@ -49,9 +48,6 @@ public:
         high += left.high_ * right.low_;
         return uint128{high, low};
 	}
-    friend uint128 operator/(const uint128 left, const std::uint64_t right) noexcept {
-        return uint128{left.high_ / right, left.low_ / right};
-    }
 
     friend uint128 operator&(const uint128 left, const uint128 right) noexcept {
         std::uint64_t low = left.low_ & right.low_;
@@ -195,7 +191,105 @@ public:
         (void)subborrow(right.high_, left.high_, std::uint8_t(right.low_ < left.low_), c);
         return !bit_cast<bool>(c); // msvc generates: setc al; test al,al; sete al instead of setnc
     }
+#else
+private:
+    __uint128_t num;
 
+    struct from_uint128 { explicit from_uint128() = default; };
+    
+    explicit constexpr uint128(const from_uint128, const __uint128_t num_) noexcept : num{num_} {}
+public:
+    constexpr uint128(const std::uint64_t first_) noexcept : num{first_} {}
+
+	explicit constexpr uint128(const std::uint64_t _high, const std::uint64_t _low) noexcept
+        : num{(__uint128_t{_high} << 64) | __uint128_t{_low}} {}
+
+    LIBNUM_FORCEINLINE constexpr std::uint64_t low() const noexcept { return std::uint64_t(num); }
+    LIBNUM_FORCEINLINE constexpr std::uint64_t high() const noexcept { return std::uint64_t(num >> 64U); }
+
+	friend uint128 operator+(const uint128 left, const uint128 right) noexcept {
+        return uint128{from_uint128{}, left.num + right.num};
+	}
+	friend uint128 operator-(const uint128 left, const uint128 right) noexcept {
+        return uint128{from_uint128{}, left.num - right.num};
+	}
+	friend uint128 operator*(const uint128 left, const uint128 right) noexcept {
+        return uint128{from_uint128{}, left.num * right.num};
+	}
+
+    friend uint128 operator&(const uint128 left, const uint128 right) noexcept {
+        return uint128{from_uint128{}, left.num & right.num};
+    }
+    friend uint128 operator|(const uint128 left, const uint128 right) noexcept {
+        return uint128{from_uint128{}, left.num | right.num};
+    }
+    friend uint128 operator^(const uint128 left, const uint128 right) noexcept {
+        return uint128{from_uint128{}, left.num ^ right.num};
+    }
+    friend uint128 operator<<(const uint128 left, const std::uint8_t cnt) noexcept {
+        return uint128{from_uint128{}, left.num << (cnt & 127U)};
+    }
+    friend uint128 operator>>(const uint128 left, const std::uint8_t cnt) noexcept {
+        return uint128{from_uint128{}, left.num >> (cnt & 127U)};
+    }
+    friend uint128 operator~(const uint128 left) noexcept {
+        return uint128{from_uint128{}, ~left.num};
+    }
+
+    friend uint128& operator&=(uint128& left, const uint128 right) noexcept {
+        return (left = left & right);
+    }
+    friend uint128& operator|=(uint128& left, const uint128 right) noexcept {
+        return (left = left | right);
+    }
+    friend uint128& operator^=(uint128& left, const uint128 right) noexcept {
+        return (left = left ^ right);
+    }
+    friend uint128& operator<<=(uint128& left, const std::uint8_t right) noexcept {
+        return (left = left << right);
+    }
+    friend uint128& operator>>=(uint128& left, const std::uint8_t right) noexcept {
+        return (left = left >> right);
+    }
+
+    friend uint128& operator++(uint128& left) noexcept {
+        ++(left.num);
+        return left;
+    }
+    friend uint128 operator++(uint128& left, int) noexcept {
+        auto tmp = left;
+        ++(left.num);
+        return tmp;
+    }
+    friend uint128& operator--(uint128& left) noexcept {
+        --(left.num);
+        return left;
+    }
+    friend uint128 operator--(uint128& left, int) noexcept {
+        auto tmp = left;
+        --(left.num);
+        return tmp;
+    }
+
+	friend bool operator==(const uint128 left, const uint128 right) noexcept {
+        return left.num == right.num;
+	}
+	friend bool operator!=(const uint128 left, const uint128 right) noexcept {
+        return left.num != right.num;
+	}
+	friend bool operator>(const uint128 left, const uint128 right) noexcept {
+        return left.num > right.num;
+	}
+	friend bool operator>=(const uint128 left, const uint128 right) noexcept {
+        return left.num >= right.num;
+	}                      
+    friend bool operator<(const uint128 left, const uint128 right) noexcept {
+        return left.num < right.num;
+    }
+    friend bool operator<=(const uint128 left, const uint128 right) noexcept {
+        return left.num <= right.num;
+    }
+#endif
 };
 
 }
