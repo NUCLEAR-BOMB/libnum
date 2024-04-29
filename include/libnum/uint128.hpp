@@ -3,6 +3,8 @@
 #include <libnum/detail/intrinsics.hpp>
 
 #include <cstdint>
+#include <limits>
+#include <climits>
 
 namespace libnum {
 
@@ -165,3 +167,59 @@ public:
 
 }
 
+template<>
+class ::std::numeric_limits<libnum::uint128> {
+    using uint64_limits = ::std::numeric_limits<std::uint64_t>;
+public:
+    static constexpr bool is_specialized = true;
+    static constexpr bool is_signed = false;
+    static constexpr bool is_integer = true;
+    static constexpr bool is_exact = true;
+    static constexpr bool has_infinity = false;
+    static constexpr bool has_quiet_NaN = false;
+    static constexpr bool has_signaling_NaN = false;
+    static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
+    static constexpr bool has_denorm_loss = false;
+    static constexpr std::float_round_style round_style = std::round_toward_zero;
+    static constexpr bool is_iec559 = false;
+    static constexpr bool is_bounded = true;
+    static constexpr bool is_modulo = true;
+    static constexpr int digits = CHAR_BIT * 16;
+    static constexpr int digits10 = 38;
+    static constexpr int max_digits10 = 0;
+    static constexpr int radix = 2;
+    static constexpr int min_exponent = 0;
+    static constexpr int min_exponent10 = 0;
+    static constexpr int max_exponent = 0;
+    static constexpr int max_exponent10 = 0;
+    static constexpr bool traps = uint64_limits::traps;
+    static constexpr bool tinyness_before = false;
+
+    static constexpr libnum::uint128(min)() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128 lowest() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128(max)() noexcept {
+        return libnum::uint128{uint64_limits::max(), uint64_limits::max()};
+    }
+    static constexpr libnum::uint128 epsilon() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128 round_error() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128 infinity() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128 quiet_NaN() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128 signaling_NaN() noexcept {
+        return libnum::uint128{0, 0};
+    }
+    static constexpr libnum::uint128 denorm_min() noexcept {
+        return libnum::uint128{0, 0};
+    }
+};

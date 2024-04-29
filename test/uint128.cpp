@@ -3,6 +3,8 @@
 #include <libnum/uint128.hpp>
 #include <charconv>
 
+#include "numeric_limits_check.hpp"
+
 namespace doctest {
     template<> struct StringMaker<libnum::uint128> {
         static String convert(const libnum::uint128& value) {
@@ -231,6 +233,9 @@ TEST_CASE("uint128::operator<=") {
     CHECK_FALSE(uint128{1, 1} <= uint128{1, 0});
 }
 
+TEST_CASE("uint128 numeric_limits") {
+    numeric_limits_check<uint128>();
+}
 
 }
 
