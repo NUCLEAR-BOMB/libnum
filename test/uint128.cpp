@@ -9,7 +9,7 @@
 namespace doctest {
     template<> struct StringMaker<libnum::uint128> {
         static String convert(const libnum::uint128& value) {
-            return "[" + doctest::toString(value.high) + " " + doctest::toString(value.low) + "]";
+            return "[" + doctest::toString(value.high()) + " " + doctest::toString(value.low()) + "]";
         }
     };
 }
