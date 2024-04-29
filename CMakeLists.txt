@@ -11,6 +11,7 @@ add_library(libnum INTERFACE
 
     "include/libnum/detail/intrinsics.hpp"
     "include/libnum/detail/preprocessor.hpp"
+    "include/libnum/detail/traits.hpp"
 )
 
 if (NOT PROJECT_IS_TOP_LEVEL)

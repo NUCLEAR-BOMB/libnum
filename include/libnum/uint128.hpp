@@ -1,6 +1,7 @@
 #pragma once
 
 #include <libnum/detail/intrinsics.hpp>
+#include <libnum/detail/traits.hpp>
 
 #include <cstdint>
 #include <limits>
