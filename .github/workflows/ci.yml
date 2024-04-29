@@ -18,6 +18,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.1.4
 
+      - name: Install LLVM
+        run: winget install -e --id LLVM.LLVM -v 18.1.4
+
       - name: Configure CMake
         run: cmake -B build -DCMAKE_BUILD_TYPE=${{matrix.config}} ${{matrix.options}}
 
