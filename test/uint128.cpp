@@ -2,6 +2,7 @@
 
 #include <libnum/uint128.hpp>
 #include <charconv>
+#include <vector>
 
 #include "numeric_limits_check.hpp"
 
@@ -231,6 +232,95 @@ TEST_CASE("uint128::operator<=") {
     CHECK_FALSE(uint128{1} <= uint128{0});
     CHECK_FALSE(uint128{1, 0} <= uint128{0});
     CHECK_FALSE(uint128{1, 1} <= uint128{1, 0});
+}
+
+TEST_CASE("uint128::operator++") {
+    SUBCASE("prefix") {
+        uint128 x = 1;
+        CHECK((++x) == 2);
+        ++x;
+        CHECK(x == 3);
+
+        uint128 y = std::uint64_t(-1);
+        ++y;
+        CHECK(y == uint128{1, 0});
+        CHECK((++y) == uint128{1, 1});
+
+        uint128 z{std::uint64_t(-1), 0};
+        ++z;
+        CHECK(z == uint128{std::uint64_t(-1), 1});
+
+        uint128 w{std::uint64_t(-1), std::uint64_t(-1)};
+        ++w;
+        CHECK(w == 0);
+
+        std::vector<uint128> is;
+        for (uint128 i = 0; i < 5; ++i) {
+            is.emplace_back(i);
+        }
+        CHECK(is == std::vector<uint128>{{0, 1, 2, 3, 4}});
+
+        is.clear();
+        for (uint128 i = 0; i <= 5; ++i) {
+            is.emplace_back(i);
+        }
+        CHECK(is == std::vector<uint128>{{0, 1, 2, 3, 4, 5}});
+    }
+    SUBCASE("postfix") {
+        uint128 x = 1;
+        CHECK((x++) == 1);
+        x++;
+        CHECK(x == 3);
+
+        uint128 y = std::uint64_t(-1);
+        CHECK((y++) == uint128{0, std::uint64_t(-1)});
+        y++;
+        CHECK(y == uint128{1, 1});
+
+        uint128 z{std::uint64_t(-1), 0};
+        CHECK((z++) == uint128{std::uint64_t(-1), 0});
+        CHECK(z == uint128{std::uint64_t(-1), 1});
+
+        uint128 w{std::uint64_t(-1), std::uint64_t(-1)};
+        CHECK((w++) == uint128{std::uint64_t(-1), std::uint64_t(-1)});
+        CHECK(w == 0);
+    }
+}
+
+TEST_CASE("uint128::operator--") {
+    SUBCASE("prefix") {
+        uint128 x = 1;
+        --x;
+        CHECK(x == 0);
+        CHECK((--x) == uint128{std::uint64_t(-1), std::uint64_t(-1)});
+
+        uint128 y{1, 0};
+        --y;
+        CHECK(y == uint128{0, std::uint64_t(-1)});
+        --y;
+        CHECK(y == uint128{0, std::uint64_t(-2)});
+
+        std::vector<uint128> is;
+        for (uint128 i = 5; i > 0; --i) {
+            is.emplace_back(i);
+        }
+        CHECK(is == std::vector<uint128>{{5, 4, 3, 2, 1}});
+
+        is.clear();
+        for (uint128 i = 6; i >= 2; --i) {
+            is.emplace_back(i);
+        }
+        CHECK(is == std::vector<uint128>{{6, 5, 4, 3, 2}});
+    }
+    SUBCASE("postfix") {
+        uint128 x = 1;
+        CHECK((x--) == 1);
+        CHECK(x == 0);
+
+        uint128 y = 0;
+        CHECK((y--) == 0);
+        CHECK(y == uint128{std::uint64_t(-1), std::uint64_t(-1)});
+    }
 }
 
 TEST_CASE("uint128 numeric_limits") {

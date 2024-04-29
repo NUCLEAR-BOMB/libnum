@@ -106,6 +106,33 @@ public:
         return (left = left >> right);
     }
 
+    friend uint128& operator++(uint128& left) noexcept {
+        using detail::addcarry;
+
+		std::uint8_t c{};
+		left.low = addcarry(left.low, 1, 0, c);
+        left.high = addcarry(left.high, 0, c, c);
+        return left;
+    }
+    friend uint128 operator++(uint128& left, int) noexcept {
+        auto tmp = left;
+        ++left;
+        return tmp;
+    }
+    friend uint128& operator--(uint128& left) noexcept {
+        using detail::addcarry;
+
+		std::uint8_t c{};
+		left.low = addcarry(left.low, std::uint64_t(-1), 0, c);
+        left.high = addcarry(left.high, std::uint64_t(-1), c, c);
+        return left;
+    }
+    friend uint128 operator--(uint128& left, int) noexcept {
+        auto tmp = left;
+        --left;
+        return tmp;
+    }
+
 	friend bool operator==(const uint128 left, const uint128 right) noexcept {
         // xor low2, low1
         // xor high2, high1
