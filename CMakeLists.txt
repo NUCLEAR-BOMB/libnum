@@ -8,6 +8,7 @@ option(LIBNUM_ENABLE_CLANG_TIDY "Enable the clang-tidy analyzer" ${PROJECT_IS_TO
 
 add_library(libnum INTERFACE
     "include/libnum/uint128.hpp"
+    "include/libnum/int128.hpp"
 
     "include/libnum/detail/intrinsics.hpp"
     "include/libnum/detail/preprocessor.hpp"
