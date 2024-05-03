@@ -35,3 +35,23 @@ jobs:
 
       - name: Run tests
         run: cmake --build build --config ${{matrix.config}} --target run-libnum-test
+  
+  clang-tidy:
+    name: Clang Tidy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.4
+
+      - name: Get CMake and Ninja
+        uses: lukka/get-cmake@v3.29.2
+        with:
+          cmakeVersion: "3.25"
+          ninjaVersion: "latest"
+
+      - name: Configure CMake
+        run: cmake -B build -G Ninja -DLIBNUM_ENABLE_CLANG_TIDY=TRUE -DLIBNUM_ENABLE_SANITIZERS=FALSE
+
+      - name: Analyze Code
+        run: cmake --build build --target clang-tidy
