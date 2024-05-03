@@ -50,11 +50,6 @@ jobs:
           cmakeVersion: "3.25"
           ninjaVersion: "latest"
 
-      - name: Install LLVM
-        uses: KyleMayes/install-llvm-action@v2.0.2
-        with:
-          version: "18.1.3"
-
       - name: Configure CMake
         run: >
           cmake -B build -G Ninja
