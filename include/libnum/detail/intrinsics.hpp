@@ -25,7 +25,7 @@ inline std::uint64_t addcarry(std::uint64_t x, std::uint64_t y, unsigned char ca
 	carry_out = ::_addcarry_u64(carry_in, x, y, &out);
 	return out;
 #else
-    std::uint64_t cf{};
+    unsigned long long cf{};
     std::uint64_t out = __builtin_addcll(x, y, carry_in, &cf);
     carry_out = std::uint8_t(cf);
     return out;
@@ -39,7 +39,7 @@ inline std::uint64_t subborrow(std::uint64_t x, std::uint64_t y, unsigned char c
 	carry_out = ::_subborrow_u64(carry_in, x, y, &out);
 	return out;
 #else
-    std::uint64_t cf{};
+    unsigned long long cf{};
     std::uint64_t out = __builtin_subcll(x, y, carry_in, &cf);
     carry_out = std::uint8_t(cf);
     return out;
