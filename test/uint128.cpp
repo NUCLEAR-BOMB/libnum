@@ -20,8 +20,8 @@ using namespace libnum;
 
 TEST_CASE("uint128::operator+") {
     SUBCASE("small") {
-        uint128 x = 123;
-        uint128 y = 456;
+        const uint128 x = 123;
+        const uint128 y = 456;
 
         CHECK(x + y == 579);
         CHECK(y + x == 579);
@@ -30,7 +30,7 @@ TEST_CASE("uint128::operator+") {
         CHECK(5 + x  == 128);
     }
     SUBCASE("large") {
-        uint128 x = uint64_t(-1);
+        const uint128 x = uint64_t(-1);
         uint128 y = 1;
 
         CHECK(x + y == uint128{1, 0});
@@ -42,8 +42,8 @@ TEST_CASE("uint128::operator+") {
 }
 
 TEST_CASE("uint128::operator-") {
-    uint128 x = 100;
-    uint128 y = 55;
+    const uint128 x = 100;
+    const uint128 y = 55;
 
     CHECK(x - y == 45);
     CHECK(y - x == uint128{uint64_t(-1), uint64_t(-45)});
@@ -325,6 +325,11 @@ TEST_CASE("uint128::operator--") {
 
 TEST_CASE("uint128 numeric_limits") {
     numeric_limits_check<uint128>();
+}
+
+TEST_CASE("uint128 parse") {
+    SUBCASE("lenght=0") {
+    }
 }
 
 }

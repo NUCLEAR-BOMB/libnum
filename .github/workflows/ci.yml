@@ -51,7 +51,9 @@ jobs:
           ninjaVersion: "latest"
 
       - name: Configure CMake
-        run: cmake -B build -G Ninja -DLIBNUM_ENABLE_CLANG_TIDY=TRUE -DLIBNUM_ENABLE_SANITIZERS=FALSE
+        run: >
+          cmake -B build -G Ninja
+          -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_C_COMPILER=clang -DLIBNUM_ENABLE_CLANG_TIDY=TRUE -DLIBNUM_ENABLE_SANITIZERS=FALSE
 
       - name: Analyze Code
         run: cmake --build build --target clang-tidy
