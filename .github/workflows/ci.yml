@@ -35,6 +35,10 @@ jobs:
 
       - name: Run tests
         run: cmake --build build --config ${{matrix.config}} --target run-libnum-test
+
+      - name: Run assembly tests
+        if: matrix.config == "Release"
+        run: cmake --build build --config Release --target run-libnum-assembly-test
   
   clang-tidy:
     name: Clang Tidy
