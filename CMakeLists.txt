@@ -5,6 +5,7 @@ project(libnum VERSION 0.1 LANGUAGES CXX)
 option(LIBNUM_BUILD_TEST "Build the test target" ${PROJECT_IS_TOP_LEVEL})
 option(LIBNUM_ENABLE_SANITIZERS "Enable sanitizers for test project" ${PROJECT_IS_TOP_LEVEL})
 option(LIBNUM_ENABLE_CLANG_TIDY "Enable the clang-tidy analyzer" ${PROJECT_IS_TOP_LEVEL})
+option(LIBNUM_ASSEMBLY_TEST "Enable assembly tests" ${PROJECT_IS_TOP_LEVEL})
 
 add_library(libnum INTERFACE
     "include/libnum/uint128.hpp"

@@ -1,0 +1,44 @@
+{uint128_add:msvc}
+mov rax, qword ptr [*]
+add rax, qword ptr [*] ; rax = low1 + low2
+mov rcx, qword ptr [*]
+adc rcx, qword ptr [*] ; rcx = high1 + high2 + CF
+mov qword ptr [*], rcx ; high3 = rcx
+mov qword ptr [*], rax ; low3 = rax
+ret
+
+{uint128_sub}
+mov rax, qword ptr [*]
+sub rax, qword ptr [*] ; rax = low1 - low2
+mov rcx, qword ptr [*]
+sbb rcx, qword ptr [*] ; rcx = high1 - high2 - CF
+mov qword ptr [*], rcx|rax ; high3 = rcx
+mov qword ptr [*], rax|rcx ; low3 = rcx
+ret
+
+{uint128_mul:msvc}
+mov r8, qword ptr [*]
+mov r9, qword ptr [*]
+mov rax, r8
+mul qword ptr [*]          ; rdx:rax = low1 * low2
+imul r8, qword ptr [*]     ; r8 = low1 * high2
+imul r9, qword ptr [*]     ; r9 = high1 * low2
+mov qword ptr [*], rax     ; low3 = rax
+mov qword ptr [rsp + 8], 0 ; ???
+lea rax, [rdx + r8]        ; rax = rdx + low1 * high2
+add r9, rax                ; r9 = rax + high1 * low2
+mov qword ptr [*], r9      ; high3 = r9
+ret
+
+{uint128_mul:clang}
+mov r8, qword ptr [*]      ; r8 = low2
+mov rcx, qword ptr [*]     ; rcx = low1
+mov rax, rcx               ; rax = rcx
+mul r8                     ; rdx:rax = low1 * low2
+imul rcx, qword ptr [*]    ; rcx = low1 * high2
+add rcx, rdx               ; rcx = (low1 * high2) + rdx
+imul r8, qword ptr [*]     ; r8 = high1 * low2
+add r8, rcx                ; r8 = (high1 * low2) + (low1 * high2) + rdx
+mov qword ptr [*], rax     ; low3 = rax
+mov qword ptr [*], r8      ; high3 = r8
+ret
