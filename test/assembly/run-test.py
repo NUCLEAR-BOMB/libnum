@@ -122,11 +122,11 @@ def verify_check_file(actual_disasm, expected_disasm, tags):
             continue
         
         if len(actual_insts) > len(fn_insts):
-            print(f'Error: expected disassembly function is too short. function: "{fn_name}"')
+            print(f'Error: expected disassembly function is too short. {len(actual_insts)} (actual) > {len(fn_insts)} (expected). function: "{fn_name}"')
             print(f'\nFull disassembly of function "{fn_name}":\n\t{'\n\t'.join(actual_insts)}')
             sys.exit(1)
         elif len(actual_insts) < len(fn_insts):
-            print(f'Error: expected disassembly function is too long. function: "{fn_name}"')
+            print(f'Error: expected disassembly function is too long. {len(actual_insts)} (actual) < {len(fn_insts)} (expected). function: "{fn_name}"')
             print(f'\nFull disassembly of function "{fn_name}":\n\t{'\n\t'.join(actual_insts)}')
             sys.exit(1)
 
