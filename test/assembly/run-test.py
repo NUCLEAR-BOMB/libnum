@@ -2,10 +2,6 @@ import sys
 import subprocess
 import glob
 import re
-from itertools import zip_longest
-import shutil
-import filecheck
-import filecheck.filecheck
 
 def parse_functions_disassembly(string):
     functions = {}
