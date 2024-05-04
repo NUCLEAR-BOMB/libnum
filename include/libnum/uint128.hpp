@@ -2,6 +2,7 @@
 
 #include <libnum/detail/intrinsics.hpp>
 #include <libnum/detail/traits.hpp>
+#include <libnum/detail/parse_u128.hpp>
 
 #include <cstdint>
 #include <limits>
@@ -9,66 +10,65 @@
 
 namespace libnum {
 
-class uint128 {
+class alignas(16) uint128 {
 #if !LIBNUM_HAS_BUILTIN_UINT128
 private:
-	std::uint64_t low_;
-	std::uint64_t high_;
+    std::uint64_t val[2];
 public:
-	constexpr uint128(const std::uint64_t first_) noexcept : low_{first_}, high_{} {}
+	constexpr uint128(const std::uint64_t first_) noexcept : val{0, first_} {}
 
 	explicit constexpr uint128(const std::uint64_t _high, const std::uint64_t _low) noexcept
-		: low_{_low}, high_{_high} {}
+        : val{_high, _low} {}
 
-    LIBNUM_FORCEINLINE constexpr std::uint64_t low() const noexcept { return low_; }
-    LIBNUM_FORCEINLINE constexpr std::uint64_t high() const noexcept { return high_; }
+    LIBNUM_FORCEINLINE constexpr std::uint64_t low() const noexcept { return val[1]; }
+    LIBNUM_FORCEINLINE constexpr std::uint64_t high() const noexcept { return val[0]; }
 
 	friend uint128 operator+(const uint128 left, const uint128 right) noexcept {
 		using detail::addcarry;
 
 		std::uint8_t c{};
-		std::uint64_t low = addcarry(left.low_, right.low_, 0, c);
-        std::uint64_t high = addcarry(left.high_, right.high_, c, c);
+		std::uint64_t low = addcarry(left.val[1], right.val[1], 0, c);
+        std::uint64_t high = addcarry(left.val[0], right.val[0], c, c);
         return uint128{high, low};
 	}
 	friend uint128 operator-(const uint128 left, const uint128 right) noexcept {
 		using detail::subborrow;
 
 		std::uint8_t c{};
-		std::uint64_t low = subborrow(left.low_, right.low_, 0, c);
-        std::uint64_t high = subborrow(left.high_, right.high_, c, c);
+		std::uint64_t low = subborrow(left.val[1], right.val[1], 0, c);
+        std::uint64_t high = subborrow(left.val[0], right.val[0], c, c);
         return uint128{high, low};
 	}
 	friend uint128 operator*(const uint128 left, const uint128 right) noexcept {
 		using detail::mul;
 
         std::uint64_t high{};
-        std::uint64_t low = mul(left.low_, right.low_, high);
-        high += left.low_ * right.high_;
-        high += left.high_ * right.low_;
+        std::uint64_t low = mul(left.val[1], right.val[1], high);
+        high += left.val[1] * right.val[0];
+        high += left.val[0] * right.val[1];
         return uint128{high, low};
 	}
 
     friend uint128 operator&(const uint128 left, const uint128 right) noexcept {
-        std::uint64_t low = left.low_ & right.low_;
-        std::uint64_t high = left.high_ & right.high_;
+        std::uint64_t low = left.val[1] & right.val[1];
+        std::uint64_t high = left.val[0] & right.val[0];
         return uint128{high, low};
     }
     friend uint128 operator|(const uint128 left, const uint128 right) noexcept {
-        std::uint64_t low = left.low_ | right.low_;
-        std::uint64_t high = left.high_ | right.high_;
+        std::uint64_t low = left.val[1] | right.val[1];
+        std::uint64_t high = left.val[0] | right.val[0];
         return uint128{high, low};
     }
     friend uint128 operator^(const uint128 left, const uint128 right) noexcept {
-        std::uint64_t low = left.low_ ^ right.low_;
-        std::uint64_t high = left.high_ ^ right.high_;
+        std::uint64_t low = left.val[1] ^ right.val[1];
+        std::uint64_t high = left.val[0] ^ right.val[0];
         return uint128{high, low};
     }
     friend uint128 operator<<(const uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shl128, detail::shl;
 
-        std::uint64_t x = shl128(left.low_, left.high_, cnt);
-        std::uint64_t y = shl(left.low_, cnt);
+        std::uint64_t x = shl128(left.val[1], left.val[0], cnt);
+        std::uint64_t y = shl(left.val[1], cnt);
 
         std::uint64_t low = 0;
         if ((cnt & 64) == 0) { low = y; }
@@ -79,8 +79,8 @@ public:
     friend uint128 operator>>(const uint128 left, const std::uint8_t cnt) noexcept {
         using detail::shr128, detail::shr;
 
-        std::uint64_t x = shr128(left.low_, left.high_, cnt);
-        std::uint64_t y = shr(left.high_, cnt);
+        std::uint64_t x = shr128(left.val[1], left.val[0], cnt);
+        std::uint64_t y = shr(left.val[0], cnt);
 
         std::uint64_t high = 0;
         if ((cnt & 64) == 0) { high = y; }
@@ -89,7 +89,7 @@ public:
         return uint128{high, low};
     }
     friend uint128 operator~(const uint128 left) noexcept {
-        return uint128{~left.high_, ~left.low_};
+        return uint128{~left.val[0], ~left.val[1]};
     }
 
     friend uint128& operator&=(uint128& left, const uint128 right) noexcept {
@@ -112,8 +112,8 @@ public:
         using detail::addcarry;
 
 		std::uint8_t c{};
-		left.low_ = addcarry(left.low_, 1, 0, c);
-        left.high_ = addcarry(left.high_, 0, c, c);
+		left.val[1] = addcarry(left.val[1], 1, 0, c);
+        left.val[0] = addcarry(left.val[0], 0, c, c);
         return left;
     }
     friend uint128 operator++(uint128& left, int) noexcept {
@@ -125,8 +125,8 @@ public:
         using detail::addcarry;
 
 		std::uint8_t c{};
-		left.low_ = addcarry(left.low_, std::uint64_t(-1), 0, c);
-        left.high_ = addcarry(left.high_, std::uint64_t(-1), c, c);
+		left.val[1] = addcarry(left.val[1], std::uint64_t(-1), 0, c);
+        left.val[0] = addcarry(left.val[0], std::uint64_t(-1), c, c);
         return left;
     }
     friend uint128 operator--(uint128& left, int) noexcept {
@@ -141,7 +141,7 @@ public:
         // or low2, high2
         // setz al
 
-		return ((left.low_ ^ right.low_) | (left.high_ ^ right.high_)) == 0;
+		return ((left.val[1] ^ right.val[1]) | (left.val[0] ^ right.val[0])) == 0;
 	}
 	friend bool operator!=(const uint128 left, const uint128 right) noexcept {
         // xor low2, low1
@@ -149,7 +149,7 @@ public:
         // or low2, high2
         // setnz al
 
-		return ((left.low_ ^ right.low_) | (left.high_ ^ right.high_)) != 0;
+		return ((left.val[1] ^ right.val[1]) | (left.val[0] ^ right.val[0])) != 0;
 	}
 	friend bool operator>(const uint128 left, const uint128 right) noexcept {
         // cmp low2, low1
@@ -158,7 +158,7 @@ public:
         using detail::subborrow, detail::bit_cast;
 
         std::uint8_t c{};
-        (void)subborrow(right.high_, left.high_, std::uint8_t(right.low_ < left.low_), c);
+        (void)subborrow(right.val[0], left.val[0], std::uint8_t(right.val[1] < left.val[1]), c);
         return bit_cast<bool>(c);
 	}
 	friend bool operator>=(const uint128 left, const uint128 right) noexcept {
@@ -168,7 +168,7 @@ public:
         using detail::subborrow, detail::bit_cast;
 
         std::uint8_t c{};
-        (void)subborrow(left.high_, right.high_, std::uint8_t(left.low_ < right.low_), c);
+        (void)subborrow(left.val[0], right.val[0], std::uint8_t(left.val[1] < right.val[1]), c);
         return !bit_cast<bool>(c); // msvc generates: setc al; test al,al; sete al instead of setnc
 	}                      
     friend bool operator<(const uint128 left, const uint128 right) noexcept {
@@ -178,7 +178,7 @@ public:
         using detail::subborrow, detail::bit_cast;
 
         std::uint8_t c{};
-        (void)subborrow(left.high_, right.high_, std::uint8_t(left.low_ < right.low_), c);
+        (void)subborrow(left.val[0], right.val[0], std::uint8_t(left.val[1] < right.val[1]), c);
         return bit_cast<bool>(c);
     }
     friend bool operator<=(const uint128 left, const uint128 right) noexcept {
@@ -188,7 +188,7 @@ public:
         using detail::subborrow, detail::bit_cast;
 
         std::uint8_t c{};
-        (void)subborrow(right.high_, left.high_, std::uint8_t(right.low_ < left.low_), c);
+        (void)subborrow(right.val[0], left.val[0], std::uint8_t(right.val[1] < left.val[1]), c);
         return !bit_cast<bool>(c); // msvc generates: setc al; test al,al; sete al instead of setnc
     }
 #else
@@ -291,6 +291,8 @@ public:
     }
 #endif
 };
+
+
 
 }
 
