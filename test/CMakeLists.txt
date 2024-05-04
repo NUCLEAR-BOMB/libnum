@@ -5,6 +5,7 @@ add_executable(libnum-test
 	"main.cpp"
 	
 	"uint128.cpp"
+    "int128.cpp"
 )
 
 target_add_warnings(libnum-test)
@@ -24,7 +25,10 @@ unset(CMAKE_WARN_DEPRECATED CACHE)
 target_link_libraries(libnum-test PRIVATE doctest::doctest)
 target_compile_definitions(libnum-test PRIVATE DOCTEST_CONFIG_NO_EXCEPTIONS)
 
-add_custom_target(run-libnum-test VERBATIM COMMAND "$<TARGET_FILE:libnum-test>")
+set_property(TARGET libnum-test APPEND PROPERTY VS_DEBUGGER_ENVIRONMENT "UBSAN_OPTIONS=print_stacktrace=1 ASAN_OPTIONS=detect_odr_violation=0")
+add_custom_target(run-libnum-test VERBATIM COMMAND
+    "${CMAKE_COMMAND}" -E env "UBSAN_OPTIONS=print_stacktrace=1" "ASAN_OPTIONS=detect_odr_violation=0" "$<TARGET_FILE:libnum-test>"
+)
 
 if (LIBNUM_ENABLE_SANITIZERS)
     include("${PROJECT_SOURCE_DIR}/cmake/sanitizers.cmake")
@@ -39,4 +43,8 @@ if (LIBNUM_ENABLE_CLANG_TIDY)
         EXTRA_ARG "-std=c++17" "-Wno-unknown-warning-option"
         USE_COLOR QUIET
     )
+endif()
+
+if (LIBNUM_ASSEMBLY_TEST)
+    add_subdirectory(assembly)
 endif()
